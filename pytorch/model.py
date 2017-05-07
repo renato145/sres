@@ -35,5 +35,8 @@ class SuperRes(nn.Module):
         gpu_ids = None
         if isinstance(model_input.data, torch.cuda.FloatTensor) and self.ngpu > 1:
             gpu_ids = range(self.ngpu)
-            
-        return nn.parallel.data_parallel(self.model, model_input, gpu_ids)
+        
+        if self.ngpu == 0:
+            return self.model(model_input)
+        else:
+            return nn.parallel.data_parallel(self.model, model_input, gpu_ids)
