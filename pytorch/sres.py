@@ -20,8 +20,10 @@ class SRES(object):
         self.net = SuperRes(self.n_gpu, 4)
         if self.n_gpu > 0:
             self.net = self.net.cuda()
-        
-        data = torch.load(self.path)
+            data = torch.load(self.path)
+        else:
+            data = torch.load(self.path, map_location=lambda storage, loc: storage)
+            
         self.net.load_state_dict(data['model'])
         self.net.eval()
     
